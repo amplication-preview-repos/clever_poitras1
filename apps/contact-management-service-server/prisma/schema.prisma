@@ -1,0 +1,77 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Address {
+  city       String?
+  contacts   Contact[]
+  country    String?
+  createdAt  DateTime  @default(now())
+  id         String    @id @default(cuid())
+  notes      String?
+  postalCode String?
+  state      String?
+  street     String?
+  updatedAt  DateTime  @updatedAt
+}
+
+model Phone {
+  contacts    Contact[]
+  createdAt   DateTime            @default(now())
+  id          String              @id @default(cuid())
+  notes       String?
+  phoneNumber String?
+  typeField   EnumPhoneTypeField?
+  updatedAt   DateTime            @updatedAt
+}
+
+model Company {
+  contacts  Contact[]
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  industry  String?
+  name      String?
+  notes     String?
+  updatedAt DateTime  @updatedAt
+}
+
+model Contact {
+  address   Address? @relation(fields: [addressId], references: [id])
+  addressId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+  createdAt DateTime @default(now())
+  email     Email?   @relation(fields: [emailId], references: [id])
+  emailId   String?
+  firstName String?
+  id        String   @id @default(cuid())
+  jobTitle  String?
+  lastName  String?
+  notes     String?
+  phone     Phone?   @relation(fields: [phoneId], references: [id])
+  phoneId   String?
+  updatedAt DateTime @updatedAt
+}
+
+model Email {
+  contacts     Contact[]
+  createdAt    DateTime            @default(now())
+  emailAddress String?
+  id           String              @id @default(cuid())
+  notes        String?
+  typeField    EnumEmailTypeField?
+  updatedAt    DateTime            @updatedAt
+}
+
+enum EnumPhoneTypeField {
+  Option1
+}
+
+enum EnumEmailTypeField {
+  Option1
+}
